@@ -34,7 +34,7 @@ LINUX_BINS = \
 	tools/bin/testfs/testfs \
 	tracker/tracker
 
-REGISTRY ?= gcr.io/uber-container-tools
+REGISTRY ?= registry.cn-hangzhou.aliyuncs.com/yunkun
 
 agent/agent:: $(wildcard agent/*.go)
 	$(CROSS_COMPILER)

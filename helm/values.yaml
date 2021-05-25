@@ -1,10 +1,12 @@
 kraken:
-  tag: v0.1.1
+  image_registry: registry.cn-hangzhou.aliyuncs.com
+  namespace: yunkun
+  tag: dev
   registry_port: 30081
 
 tracker:
   config: /etc/config/tracker.yaml
-  replicas: 3
+  replicas: 1
   extraVolumes:
 #  - name: nginx-cache
 #    hostPath:
@@ -24,7 +26,7 @@ tracker:
 
 build_index:
   config: /etc/config/build-index.yaml
-  replicas: 3
+  replicas: 1
   annotations:
   extraVolumes:
   extraVolumeMounts:
@@ -41,7 +43,7 @@ build_index:
 
 origin:
   config: /etc/config/origin.yaml
-  replicas: 3
+  replicas: 1
   annotations:
   extraVolumes:
   extraVolumeMounts:
