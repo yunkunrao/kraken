@@ -11,7 +11,7 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      kraken-app: testfs
+      app.kubernetes.io/component: testfs
   template:
     metadata:
       labels:
