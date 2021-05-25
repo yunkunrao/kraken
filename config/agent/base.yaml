@@ -62,6 +62,8 @@ peer_id_factory: addr_hash
 allowed_cidrs:
   - 127.0.0.1
   - 172.17.0.1
+  - 192.168.0.2 # TODO: refactor this part when deployed in k8s cluster
+  - 192.168.0.3 # TODO
 
 nginx:
   name: kraken-agent
