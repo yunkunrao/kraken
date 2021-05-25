@@ -5,6 +5,14 @@ extends: /etc/kraken/config/origin/base.yaml
 backends:
 {{ with .Values.origin.extraBackends }}{{ tpl . $ | indent 2 }}{{ end }}
 {{ if .Values.testfs.enabled }}
+  - namespace: library/.*
+    backend:
+      registry_blob:
+        address: index.docker.io
+        security:
+          basic:
+            username: ""
+            password: ""
   - namespace: .*
     backend:
       testfs:
