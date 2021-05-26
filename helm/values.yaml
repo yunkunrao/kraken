@@ -29,34 +29,97 @@ build_index:
   replicas: 1
   annotations:
   extraVolumes:
+    - name: ca-secret
+      secret:
+        defaultMode: 420
+        secretName: ca-secret
+    - name: kraken-secret
+      secret:
+        defaultMode: 420
+        secretName: kraken-secret
   extraVolumeMounts:
+    - mountPath: /etc/kraken/ca.crt
+      name: ca-secret
+      subPath: tls.crt
+    - mountPath: /etc/kraken/ca.key
+      name: ca-secret
+      subPath: tls.key
+    - mountPath: /etc/kraken/kraken.crt
+      name: kraken-secret
+      subPath: tls.crt
+    - mountPath: /etc/kraken/kraken.key
+      name: kraken-secret
+      subPath: tls.key
   initContainers:
-#  extraBackends: |-
-#    - namespace: library/.*
-#      backend:
-#        registry_tag:
-#          address: my.private.registry
-#          security:
-#            basic:
-#              username: "joebloggs"
-#              password: "12345"
-
+  extraBackends: |-
+    - namespace: library/.*
+      backend:
+        registry_tag:
+          address: h1-harbor-registry.demo.svc.cluster.local:5443
+          security:
+            basic:
+              username: "harbor_registry_user"
+              password: "harbor_registry_password"
+    - namespace: .*
+      backend:
+        registry_blob:
+          address: h1-harbor-registry.demo.svc.cluster.local:5443
+          security:
+            basic:
+              username: "harbor_registry_user"
+              password: "harbor_registry_password"
+            tls:
+              client:
+                cert:
+                  path: /etc/kraken/kraken.crt
+                key:
+                  path: /etc/kraken/kraken.key
+              cas:
+                - path: /etc/kraken/ca.crt
 origin:
   config: /etc/config/origin.yaml
   replicas: 1
   annotations:
   extraVolumes:
+    - name: ca-secret
+      secret:
+        defaultMode: 420
+        secretName: ca-secret
+    - name: kraken-secret
+      secret:
+        defaultMode: 420
+        secretName: kraken-secret
   extraVolumeMounts:
+    - mountPath: /etc/kraken/ca.crt
+      name: ca-secret
+      subPath: tls.crt
+    - mountPath: /etc/kraken/ca.key
+      name: ca-secret
+      subPath: tls.key
+    - mountPath: /etc/kraken/kraken.crt
+      name: kraken-secret
+      subPath: tls.crt
+    - mountPath: /etc/kraken/kraken.key
+      name: kraken-secret
+      subPath: tls.key
   initContainers:
-#  extraBackends: |-
-#    - namespace: library/.*
-#      backend:
-#        registry_blob:
-#          address: my.private.registry
-#          security:
-#            basic:
-#              username: "joebloggs"
-#              password: "12345"
+  extraBackends: |-
+    - namespace: .*
+      backend:
+        registry_blob:
+          address: h1-harbor-registry.demo.svc.cluster.local:5443
+          security:
+            basic:
+              username: "harbor_registry_user"
+              password: "harbor_registry_password"
+            tls:
+              client:
+                cert:
+                  path: /etc/kraken/kraken.crt
+                key:
+                  path: /etc/kraken/kraken.key
+              cas:
+                - path: /etc/kraken/ca.crt
 
 proxy:
   config: /etc/config/proxy.yaml

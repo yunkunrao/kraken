@@ -31,6 +31,7 @@ spec:
         - /usr/bin/kraken-proxy
         - --config={{ .Values.proxy.config }}
         - --port=80
+        - --server-port=10050
         volumeMounts:
         - name: config
           mountPath: /etc/config
@@ -54,3 +55,8 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 80
+    name: port
+  - protocol: TCP
+    port: 10050
+    targetPort: 10050
+    name: server-port
