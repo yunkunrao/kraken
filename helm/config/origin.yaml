@@ -19,3 +19,11 @@ hashring:
 writeback:
   retry_interval: 100ms
   poll_retries_interval: 250ms
+
+auth:
+  s3:
+    minio-user:
+      s3:
+        aws: minio-user
+        aws_access_key_id: AKIAIOSFODNN7EXAMPLE
+        aws_secret_access_key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY

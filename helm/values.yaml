@@ -52,30 +52,17 @@ build_index:
       subPath: tls.key
   initContainers:
   extraBackends: |-
-    - namespace: library/.*
-      backend:
-        registry_tag:
-          address: h1-harbor-registry.demo.svc.cluster.local:5443
-          security:
-            basic:
-              username: "harbor_registry_user"
-              password: "harbor_registry_password"
     - namespace: .*
       backend:
-        registry_blob:
-          address: h1-harbor-registry.demo.svc.cluster.local:5443
-          security:
-            basic:
-              username: "harbor_registry_user"
-              password: "harbor_registry_password"
-            tls:
-              client:
-                cert:
-                  path: /etc/kraken/kraken.crt
-                key:
-                  path: /etc/kraken/kraken.key
-              cas:
-                - path: /etc/kraken/ca.crt
+        s3:
+          region: demo-region
+          bucket: demo-bucket
+          root_directory: /kraken/default/
+          name_path: docker_tag
+          username: minio-user
+          endpoint: http://192.168.0.2:9000
+          disable_ssl: true
+          force_path_style: true
 origin:
   config: /etc/config/origin.yaml
   replicas: 1
@@ -103,24 +90,41 @@ origin:
       name: kraken-secret
       subPath: tls.key
   initContainers:
+# refer to https://github:com/uber/kraken/blob/master/docs/CONFIGURATION:md
   extraBackends: |-
     - namespace: .*
       backend:
-        registry_blob:
-          address: h1-harbor-registry.demo.svc.cluster.local:5443
-          security:
-            basic:
-              username: "harbor_registry_user"
-              password: "harbor_registry_password"
-            tls:
-              client:
-                cert:
-                  path: /etc/kraken/kraken.crt
-                key:
-                  path: /etc/kraken/kraken.key
-              cas:
-                - path: /etc/kraken/ca.crt
-
+        s3:
+          region: demo-region
+          bucket: demo-bucket
+          root_directory: /kraken/default/
+          name_path: sharded_docker_blob
+          username: minio-user
+          endpoint: http://192.168.0.2:9000
+          disable_ssl: true
+          force_path_style: true
+    - namespace: .*
+      backend:
+        s3:
+          region: demo-region
+          bucket: demo-bucket
+          root_directory: /kraken/default/
+          name_path: docker_tag
+          username: minio-user
+          endpoint: http://192.168.0.2:9000
+          disable_ssl: true
+          force_path_style: true
+    - namespace: .*
+      backend:
+        s3:
+          region: demo-region
+          bucket: demo-bucket
+          root_directory: /kraken/default/
+          name_path: identity
+          username: minio-user
+          endpoint: http://192.168.0.2:9000
+          disable_ssl: true
+          force_path_style: true
 proxy:
   config: /etc/config/proxy.yaml
   replicas: 1
@@ -138,5 +142,5 @@ agent:
   tolerations:
 #    - operator: "Exists"
 testfs:
-  enabled: true
+  enabled: false
   annotations:
